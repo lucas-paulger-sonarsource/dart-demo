@@ -9,15 +9,39 @@ jobs:
   SonarCloud:
     name: SonarCloud
     runs-on: ubuntu-latest
+    env:
+      SONAR_SCANNER_VERSION: "6.1.0.4477"
+      SONAR_SCANNER_DIR: "$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64"
+      SONAR_SCANNER_ZIP: "$HOME/.sonar/sonar-scanner.zip"
+      SONAR_SCANNER_URL: "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux-x64.zip"
+  
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Download sonar-scanner
         run: |
-          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip
-          ls -l $HOME/.sonar/sonar-scanner.zip
-          unzip $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+          # Download the Sonar Scanner
+          curl --create-dirs -sSLo $SONAR_SCANNER_ZIP $SONAR_SCANNER_URL
+          
+          # Verify the download
+          if [ -f "$SONAR_SCANNER_ZIP" ]; then
+            echo "Download successful."
+          else
+            echo "Download failed."
+            exit 1
+          fi
+          
+          # Unzip the file
+          unzip -o $SONAR_SCANNER_ZIP -d $HOME/.sonar/
+          
+          # Verify the extraction
+          if [ -d "$SONAR_SCANNER_DIR" ]; then
+            echo "Extraction successful."
+          else
+            echo "Extraction failed."
+            exit 1
+          fi
       - name: Run sonar-scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
