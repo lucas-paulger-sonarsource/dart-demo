@@ -17,7 +17,7 @@ jobs:
         run: |
           curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip
           ls -l $HOME/.sonar/sonar-scanner.zip
-          unzip $HOME/.sonar/sonar-scanner.zip -o -d $HOME/.sonar/
+          unzip $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
       - name: Run sonar-scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
