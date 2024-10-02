@@ -13,14 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Dart
-        uses: dart-lang/setup-dart@v1
-        with:
-          sdk: '>=3.4.0 <4.0.0'
-
-      - name: Install dependencies
-        run: dart pub get
-
       - name: Download Sonar Scanner
         run: |
           curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip
@@ -31,8 +23,3 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: $HOME/.sonar/sonar-scanner-6.1.0.4477-linux-x64/bin/sonar-scanner
 
-      - name: Compile Dart to native executable
-        run: dart compile exe bin/main.dart -o bin/main
-
-      - name: Run the compiled executable
-        run: ./bin/main
