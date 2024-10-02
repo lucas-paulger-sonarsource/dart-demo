@@ -6,18 +6,19 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  sonarcloud:
+  SonarCloud:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Build
+      - name: Download sonar-scanner
         run: |
-          dart run bin/main.dart
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip
+          unzip $HOME/.sonar/sonar-scanner.zip -o -d $HOME/.sonar/
+      - name: Run sonar-scanner
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner-6.1.0.4477-linux-x64/bin/sonar-scanner
