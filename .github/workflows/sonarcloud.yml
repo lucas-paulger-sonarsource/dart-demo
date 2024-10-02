@@ -46,4 +46,4 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          sonar-scanner-6.1.0.4477-linux-x64/bin/sonar-scanner
+          $SONAR_SCANNER_DIR/bin/sonar-scanner
